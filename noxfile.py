@@ -119,14 +119,15 @@ def mypy(session):
 def typeguard(session):
     args = session.posargs or ["-m", "not e2e"]
     session.run("poetry", "install", external=True)
-    session.run("pytest", "--typeguard-packages=src", *args)
+    session.run("python", "-m", "pytest", "--typeguard-packages=src", *args)
 
 
 @nox.session(python=["3.7"])
 def tests(session):
     args = session.posargs or ["--cov"]
     session.run("poetry", "install", external=True)
-    session.run("pytest", *args)
+    # session.run("pytest", *args)
+    session.run("python", "-m", "pytest", *args)
 
 
 def install_with_constraints(session, *args, **kwargs):
