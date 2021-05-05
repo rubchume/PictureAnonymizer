@@ -126,7 +126,6 @@ def typeguard(session):
 def tests(session):
     args = session.posargs or ["--cov"]
     session.run("poetry", "install", external=True)
-    # session.run("pytest", *args)
     session.run("python", "-m", "pytest", *args)
 
 

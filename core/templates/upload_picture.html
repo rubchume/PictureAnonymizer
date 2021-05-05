@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Upload Picture</h1>
+
+{% if 'success' in request.GET %}
+    <p class="success">Picture was uploaded!</p>
+{% endif %}
+
+<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+    <table>
+        {{form.as_table}}
+    </table>
+    <input class="button" type="submit" value="Upload Picture"/>
+</form>
+
+{% endblock %}
