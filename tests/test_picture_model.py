@@ -18,8 +18,8 @@ class PictureModelTests(unittest.TestCase):
         if Path(os.path.join("media/original_pictures", "unique_identifier-asdf.jpg")).is_file():
             os.remove(os.path.join("media/original_pictures", "unique_identifier-asdf.jpg"))
 
-    if Path(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg")).is_file():
-        os.remove(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg"))
+        if Path(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg")).is_file():
+            os.remove(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg"))
 
     @mock.patch("core.models.blur_faces_of_image")
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
@@ -43,7 +43,7 @@ class PictureModelTests(unittest.TestCase):
 
     @mock.patch("core.models.blur_faces_of_image")
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
-    def test_create_blur_picture_faces_in_background(self, _, blurred_image):
+    def test_create_blurred_picture_when_saving_picture_instance(self, _, blurred_image):
         # Given
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
