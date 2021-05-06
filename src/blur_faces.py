@@ -62,12 +62,13 @@ def write_image(image_bytes: bytes, image_file_path: str):
         image_file.write(image_bytes)
 
 
-def blur_faces(image_file_path, blurred_image_file_path):
-    image = read_image(image_file_path)
-
+def blur_faces_of_image(image):
     face_rectangles = get_face_rectangles(image)
 
-    print(face_rectangles)
-    blured_image = blur_rectangles(image, face_rectangles)
+    return blur_rectangles(image, face_rectangles)
 
-    write_image(blured_image, blurred_image_file_path)
+
+def blur_faces(image_file_path, blurred_image_file_path):
+    image = read_image(image_file_path)
+    blurred_image = blur_faces_of_image(image)
+    write_image(blurred_image, blurred_image_file_path)

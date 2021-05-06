@@ -1,12 +1,7 @@
-import io
-
-from django.shortcuts import render, redirect
-
-# Create your views here.
-from django.urls import reverse_lazy, reverse
-from django.views.generic import FormView
-
 from core.forms import UploadPictureForm
+from core.models import Picture
+from django.urls import reverse
+from django.views.generic import FormView, ListView
 
 
 class UploadPictureView(FormView):
@@ -20,3 +15,10 @@ class UploadPictureView(FormView):
 
     def get_success_url(self):
         return f"{reverse('upload_picture')}?success=True"
+
+
+class DashboardView(ListView):
+    template_name = "dashboard.html"
+    model = Picture
+    extra_context = {"title": "Dashboard"}
+    context_object_name = "pictures"
