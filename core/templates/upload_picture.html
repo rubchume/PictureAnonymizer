@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% block header_nav %}
+<ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+</ul>
+{% endblock %}
+
 {% block content %}
 <h1>Upload Picture</h1>
 
