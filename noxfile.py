@@ -20,7 +20,7 @@ import nox
 
 
 nox.options.sessions = "safety", "lint_CI", "mypy", "typeguard", "tests"
-lint_locations = "tests", "src",
+lint_locations = "tests", "src", "core",
 mypy_locations = "src",
 
 
@@ -119,7 +119,7 @@ def mypy(session):
 def typeguard(session):
     args = session.posargs or ["-m", "not e2e"]
     session.run("poetry", "install", external=True)
-    session.run("python", "-m", "pytest", "--typeguard-packages=src", *args)
+    session.run("pytest", "--typeguard-packages=src,core", *args)
 
 
 @nox.session(python=["3.7"])

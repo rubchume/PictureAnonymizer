@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Picture dashboard</h1>
+
+{% for picture in pictures reversed %}
+    {% if picture.picture_blurred %}
+        <img src="{{ picture.picture_blurred.url }}" alt="img">
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

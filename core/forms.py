@@ -1,6 +1,5 @@
-from django import forms
-
 from core.models import Picture
+from django import forms
 
 
 class UploadPictureForm(forms.ModelForm):

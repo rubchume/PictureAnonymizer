@@ -66,6 +66,21 @@ six = ">=1.10.0"
 stevedore = ">=1.20.0"
 
 [[package]]
+name = "beautifulsoup4"
+version = "4.9.3"
+description = "Screen-scraping library"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+soupsieve = {version = ">1.2", markers = "python_version >= \"3.0\""}
+
+[package.extras]
+html5lib = ["html5lib"]
+lxml = ["lxml"]
+
+[[package]]
 name = "black"
 version = "19.10b0"
 description = "The uncompromising code formatter."
@@ -174,6 +189,29 @@ sqlparse = ">=0.2.2"
 [package.extras]
 argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
+
+[[package]]
+name = "django-background-tasks"
+version = "1.2.5"
+description = "Database backed asynchronous task queue"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django-compat = ">=1.0.13"
+six = "*"
+
+[[package]]
+name = "django-compat"
+version = "1.0.15"
+description = "For- and backwards compatibility layer for Django 1.4, 1.7, 1.8, 1.9, 1.10, and 1.11"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = ">=1.10.0"
 
 [[package]]
 name = "djangorestframework"
@@ -777,6 +815,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "soupsieve"
+version = "2.2.1"
+description = "A modern CSS selector implementation for Beautiful Soup."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "sqlparse"
 version = "0.4.1"
 description = "A non-validating SQL parser."
@@ -877,7 +923,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "5485212cb847dcf8bebf536e0b6b498f97df769d2939cb8ffa27d8d4c640f1b8"
+content-hash = "daf52986fc5e1e12a3820a7ead03cdf8be8565b5466c3c756bac20f8ae95fbc3"
 
 [metadata.files]
 appdirs = [
@@ -903,6 +949,11 @@ attrs = [
 bandit = [
     {file = "bandit-1.7.0-py3-none-any.whl", hash = "sha256:216be4d044209fa06cf2a3e51b319769a51be8318140659719aa7a115c35ed07"},
     {file = "bandit-1.7.0.tar.gz", hash = "sha256:8a4c7415254d75df8ff3c3b15cfe9042ecee628a1e40b44c15a98890fbfc2608"},
+]
+beautifulsoup4 = [
+    {file = "beautifulsoup4-4.9.3-py2-none-any.whl", hash = "sha256:4c98143716ef1cb40bf7f39a8e3eec8f8b009509e74904ba3a7b315431577e35"},
+    {file = "beautifulsoup4-4.9.3-py3-none-any.whl", hash = "sha256:fff47e031e34ec82bf17e00da8f592fe7de69aeea38be00523c04623c04fb666"},
+    {file = "beautifulsoup4-4.9.3.tar.gz", hash = "sha256:84729e322ad1d5b4d25f805bfa05b902dd96450f43842c4e99067d5e1369eb25"},
 ]
 black = [
     {file = "black-19.10b0-py36-none-any.whl", hash = "sha256:1b30e59be925fafc1ee4565e5e08abef6b03fe455102883820fe5ee2e4734e0b"},
@@ -993,6 +1044,12 @@ distlib = [
 django = [
     {file = "Django-3.2.1-py3-none-any.whl", hash = "sha256:e2f73790c60188d3f94f08f644de249d956b3789161e7604509d128a13fb2fcc"},
     {file = "Django-3.2.1.tar.gz", hash = "sha256:95c13c750f1f214abadec92b82c2768a5e795e6c2ebd0b4126f895ce9efffcdd"},
+]
+django-background-tasks = [
+    {file = "django-background-tasks-1.2.5.tar.gz", hash = "sha256:e1b19e8d495a276c9d64c5a1ff8b41132f75d2f58e45be71b78650dad59af9de"},
+]
+django-compat = [
+    {file = "django-compat-1.0.15.tar.gz", hash = "sha256:3ac9a3bedc56b9365d9eb241bc5157d0c193769bf995f9a78dc1bc24e7c2331b"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.12.4-py3-none-any.whl", hash = "sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf"},
@@ -1429,6 +1486,10 @@ six = [
 smmap = [
     {file = "smmap-4.0.0-py2.py3-none-any.whl", hash = "sha256:a9a7479e4c572e2e775c404dcd3080c8dc49f39918c2cf74913d30c4c478e3c2"},
     {file = "smmap-4.0.0.tar.gz", hash = "sha256:7e65386bd122d45405ddf795637b7f7d2b532e7e401d46bbe3fb49b9986d5182"},
+]
+soupsieve = [
+    {file = "soupsieve-2.2.1-py3-none-any.whl", hash = "sha256:c2c1c2d44f158cdbddab7824a9af8c4f83c76b1e23e049479aa432feb6c4c23b"},
+    {file = "soupsieve-2.2.1.tar.gz", hash = "sha256:052774848f448cf19c7e959adf5566904d525f33a3f8b6ba6f6f8f26ec7de0cc"},
 ]
 sqlparse = [
     {file = "sqlparse-0.4.1-py3-none-any.whl", hash = "sha256:017cde379adbd6a1f15a61873f43e8274179378e95ef3fede90b5aa64d304ed0"},
