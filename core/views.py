@@ -1,7 +1,11 @@
 from core.forms import UploadPictureForm
 from core.models import Picture
-from django.urls import reverse
-from django.views.generic import FormView, ListView
+from django.urls import reverse, reverse_lazy
+from django.views.generic import FormView, ListView, RedirectView
+
+
+class HomeView(RedirectView):
+    url = reverse_lazy("upload_picture")
 
 
 class UploadPictureView(FormView):
