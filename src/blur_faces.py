@@ -46,9 +46,7 @@ def blur_rectangles(image_bytes, rectangles: List[ImageRectangle]):
     for rectangle in rectangles:
         face_region = image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max]
         blurred_face = gaussian(face_region, 20, multichannel=True, preserve_range=True)
-        warnings.warn(f"blurred_face: {blurred_face[0, 0]}")
         image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max] = blurred_face
-        warnings.warn(f"in image: {image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max][0, 0]}")
 
     PIL_image = Image.fromarray(image)
     temp = io.BytesIO()
