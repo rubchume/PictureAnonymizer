@@ -2,9 +2,10 @@ from dataclasses import dataclass
 import io
 from typing import List
 
-import cv2
 from google.cloud import vision
-import numpy as np
+from PIL import Image
+from skimage.filters import gaussian
+from skimage.io import imread
 
 
 @dataclass
@@ -39,17 +40,19 @@ def get_face_rectangles(image_bytes: bytes) -> List[ImageRectangle]:
 
 
 def blur_rectangles(image_bytes, rectangles: List[ImageRectangle]):
-    nparr = np.frombuffer(image_bytes, np.uint8)
-    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    image = imread(image_bytes, plugin="imageio")
 
     for rectangle in rectangles:
         face_region = image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max]
-        blurred_face = cv2.GaussianBlur(face_region, (51, 51), 0)
+        blurred_face = gaussian(face_region, 20, multichannel=True, preserve_range=True, mode="nearest", truncate=1)
         image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max] = blurred_face
 
-    _, im_buf_arr = cv2.imencode(".png", image)
+    PIL_image = Image.fromarray(image)
+    temp = io.BytesIO()
+    PIL_image.save(temp, format="PNG")
+    image_bytes = temp.getvalue()
 
-    return im_buf_arr.tobytes()
+    return image_bytes
 
 
 def read_image(image_file_path: str) -> bytes:
