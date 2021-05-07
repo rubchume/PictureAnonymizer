@@ -21,7 +21,7 @@ import nox
 
 nox.options.sessions = "safety", "lint_CI", "mypy", "typeguard", "tests"
 lint_locations = "tests", "src", "core",
-mypy_locations = "src",
+mypy_locations = "src", "core"
 
 
 INSTALL_WITH_CONSTRAINTS = True
