@@ -19,7 +19,7 @@ import nox
 # install_with_constraints(session, "safety") and its equivalent with the lint packages
 
 
-nox.options.sessions = "safety", "lint_CI", "mypy", "typeguard", "tests"
+nox.options.sessions = "safety", "lint_CI", "mypy", "tests"
 lint_locations = "tests", "src", "core",
 mypy_locations = "src", "core"
 
@@ -113,14 +113,6 @@ def mypy(session):
     else:
         session.install("mypy")
     session.run("mypy", *args)
-
-
-@nox.session(python=["3.8"])
-def typeguard(session):
-    args = session.posargs or ["-m", "not e2e"]
-    session.run("poetry", "install", "--no-dev", external=True)
-    install_with_constraints(session, "pytest", "pytest-mock", "pytest-django", "beautifulsoup4", "typeguard")
-    session.run("pytest", "--typeguard-packages=src,core")
 
 
 @nox.session(python=["3.8"])
