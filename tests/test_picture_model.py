@@ -55,12 +55,31 @@ class PictureModelTests(unittest.TestCase):
         # When
         picture.save()
         # Then
-        time.sleep(1)
         self.assertTrue(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
         self.assert_images_equal(
             "tests/helpers/loshombresdepacoblurred.png",
             "media/blurred_pictures/unique_identifier-asdf.jpg"
         )
+
+    @mock.patch("core.models.blur_faces_of_image")
+    @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
+    def test_delete_images_when_deleting_picture_instance(self, _, blurred_image):
+        # Given
+        with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
+            uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
+
+        with open("tests/helpers/loshombresdepacoblurred.png", "rb") as file:
+            blurred_image.return_value = file.read()
+
+        picture = Picture(picture=uploaded_file)
+        picture.save()
+        self.assertTrue(Path("media/original_pictures/unique_identifier-asdf.jpg").is_file())
+        self.assertTrue(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
+        # When
+        picture.delete()
+        # Then
+        self.assertFalse(Path("media/original_pictures/unique_identifier-asdf.jpg").is_file())
+        self.assertFalse(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
 
     @staticmethod
     def assert_images_equal(expected_file_path, actual_file_path):
