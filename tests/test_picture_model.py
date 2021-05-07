@@ -101,6 +101,27 @@ class PictureModelTests(unittest.TestCase):
         self.assertFalse(Path("media/original_pictures/unique_identifier-asdf.jpg").is_file())
         self.assertFalse(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
 
+    @mock.patch("core.models.blur_faces_of_image")
+    @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
+    def test_delete_picture_instance_does_not_fail_when_images_fields_are_not_set(self, _, blurred_image):
+        # Given
+        with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
+            uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
+
+        with open("tests/helpers/loshombresdepacoblurred.png", "rb") as file:
+            blurred_image.return_value = file.read()
+
+        picture = Picture(picture=uploaded_file)
+        picture.save()
+
+        os.remove(os.path.join("media/original_pictures", "unique_identifier-asdf.jpg"))
+        os.remove(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg"))
+        picture.picture = None
+        picture.picture_blurred = None
+        picture.save()
+        # When
+        picture.delete()
+
     @staticmethod
     def assert_images_equal(expected_file_path, actual_file_path):
         with io.open(actual_file_path, "rb") as actual_image_file:
