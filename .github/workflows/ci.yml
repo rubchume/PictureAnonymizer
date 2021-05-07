@@ -33,7 +33,7 @@ jobs:
       - name: Tests
         run: nox
 
-  # Job 2: Deploy to Heroku
+  # Job 2: Deploy to Heroku (https://github.com/marketplace/actions/deploy-to-heroku)
   heroku-deploy:
     runs-on: ubuntu-latest
     steps:
