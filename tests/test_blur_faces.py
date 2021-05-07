@@ -71,7 +71,7 @@ class BlurFacesTests(unittest.TestCase):
             expected_image_bytes = expected_image_file.read()
             expected_image = imread(expected_image_bytes, plugin="imageio")
 
-        np.testing.assert_array_almost_equal(blurred_image / 255, expected_image / 255, decimal=2)
+        np.testing.assert_array_almost_equal(blurred_image / 255, expected_image / 255, decimal=1)
 
         # Finally
         if os.path.exists("tests/helpers/blurred.png"):

@@ -1,4 +1,3 @@
-import warnings
 from dataclasses import dataclass
 import io
 from typing import List
