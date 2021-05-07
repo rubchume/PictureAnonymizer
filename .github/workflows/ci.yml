@@ -1,0 +1,42 @@
+# Workflow name
+name: CI
+
+# On events
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+# Jobs to run
+jobs:
+
+  # Job 1: test
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: set up Python
+      - name: Set up
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      # Step 2: checkout repository code
+      - name: Checkout code into workspace directory
+        uses: actions/checkout@v2
+
+      # Step 3: install dependencies
+      - name: Install all Python dependencies
+        run: |
+          apt-get update
+          apt-get install ffmpeg libsm6 libxext6 -y
+          apt-get install -yq python3-dev
+          pip3 install poetry
+          pip3 install nox==2020.5.24
+
+      # Step 4: run tests
+      - name: Tests
+        run: nox
