@@ -19,16 +19,16 @@ import nox
 # install_with_constraints(session, "safety") and its equivalent with the lint packages
 
 
-nox.options.sessions = "safety", "lint_CI", "mypy", "typeguard", "tests"
+nox.options.sessions = "safety", "lint_CI", "mypy", "tests"
 lint_locations = "tests", "src", "core",
-mypy_locations = "src",
+mypy_locations = "src", "core"
 
 
 INSTALL_WITH_CONSTRAINTS = True
 WITHOUT_HASHES = True
 
 
-@nox.session(python="3.7")
+@nox.session(python="3.8")
 def safety(session):
     with tempfile.NamedTemporaryFile(delete=False) as requirements:
         filename = requirements.name
@@ -49,7 +49,7 @@ def safety(session):
     os.remove(filename)
 
 
-@nox.session(python=["3.7"])
+@nox.session(python=["3.8"])
 def lint(session):
     args = session.posargs or lint_locations
     if INSTALL_WITH_CONSTRAINTS:
@@ -72,7 +72,7 @@ def lint(session):
     session.run("flake8", *args)
 
 
-@nox.session(python=["3.7"])
+@nox.session(python=["3.8"])
 def lint_CI(session):
     args = session.posargs or lint_locations
     if INSTALL_WITH_CONSTRAINTS:
@@ -95,7 +95,7 @@ def lint_CI(session):
     session.run("flake8", *(args + ("--extend-ignore", "BLK100")))
 
 
-@nox.session(python="3.7")
+@nox.session(python="3.8")
 def black(session):
     args = session.posargs or lint_locations
     if INSTALL_WITH_CONSTRAINTS:
@@ -105,7 +105,7 @@ def black(session):
     session.run("black", *args)
 
 
-@nox.session(python=["3.7"])
+@nox.session(python=["3.8"])
 def mypy(session):
     args = session.posargs or mypy_locations
     if INSTALL_WITH_CONSTRAINTS:
@@ -115,14 +115,7 @@ def mypy(session):
     session.run("mypy", *args)
 
 
-@nox.session(python=["3.7"])
-def typeguard(session):
-    args = session.posargs or ["-m", "not e2e"]
-    session.run("poetry", "install", external=True)
-    session.run("pytest", "--typeguard-packages=src,core", *args)
-
-
-@nox.session(python=["3.7"])
+@nox.session(python=["3.8"])
 def tests(session):
     args = session.posargs or ["--cov"]
     session.run("poetry", "install", external=True)
