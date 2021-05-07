@@ -1,7 +1,6 @@
 import io
 import os
 from pathlib import Path
-import time
 import unittest
 from unittest import mock
 
@@ -55,7 +54,6 @@ class PictureModelTests(unittest.TestCase):
         # When
         picture.save()
         # Then
-        time.sleep(1)
         self.assertTrue(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
         self.assert_images_equal(
             "tests/helpers/loshombresdepacoblurred.png",
