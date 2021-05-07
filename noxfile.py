@@ -119,7 +119,7 @@ def mypy(session):
 def typeguard(session):
     args = session.posargs or ["-m", "not e2e"]
     session.run("poetry", "install", "--no-dev", external=True)
-    install_with_constraints(session, "pytest", "pytest-mock", "typeguard")
+    install_with_constraints(session, "pytest", "pytest-mock", "pytest-django", "typeguard")
     session.run("pytest", "--typeguard-packages=src,core", *args)
 
 
