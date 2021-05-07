@@ -1,7 +1,6 @@
 import io
 import os
 from pathlib import Path
-import time
 import unittest
 from unittest import mock
 
@@ -18,8 +17,8 @@ class PictureModelTests(unittest.TestCase):
         if Path(os.path.join("media/original_pictures", "unique_identifier-asdf.jpg")).is_file():
             os.remove(os.path.join("media/original_pictures", "unique_identifier-asdf.jpg"))
 
-    if Path(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg")).is_file():
-        os.remove(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg"))
+        if Path(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg")).is_file():
+            os.remove(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg"))
 
     @mock.patch("core.models.blur_faces_of_image")
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
@@ -43,7 +42,7 @@ class PictureModelTests(unittest.TestCase):
 
     @mock.patch("core.models.blur_faces_of_image")
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
-    def test_create_blur_picture_faces_in_background(self, _, blurred_image):
+    def test_create_blurred_picture_when_saving_picture_instance(self, _, blurred_image):
         # Given
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
@@ -55,12 +54,72 @@ class PictureModelTests(unittest.TestCase):
         # When
         picture.save()
         # Then
-        time.sleep(1)
         self.assertTrue(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
         self.assert_images_equal(
             "tests/helpers/loshombresdepacoblurred.png",
             "media/blurred_pictures/unique_identifier-asdf.jpg"
         )
+
+    @mock.patch("core.models.blur_faces_of_image")
+    @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
+    def test_delete_images_when_deleting_picture_instance(self, _, blurred_image):
+        # Given
+        with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
+            uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
+
+        with open("tests/helpers/loshombresdepacoblurred.png", "rb") as file:
+            blurred_image.return_value = file.read()
+
+        picture = Picture(picture=uploaded_file)
+        picture.save()
+        self.assertTrue(Path("media/original_pictures/unique_identifier-asdf.jpg").is_file())
+        self.assertTrue(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
+        # When
+        picture.delete()
+        # Then
+        self.assertFalse(Path("media/original_pictures/unique_identifier-asdf.jpg").is_file())
+        self.assertFalse(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
+
+    @mock.patch("core.models.blur_faces_of_image")
+    @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
+    def test_delete_picture_instance_does_not_fail_when_images_are_missing(self, _, blurred_image):
+        # Given
+        with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
+            uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
+
+        with open("tests/helpers/loshombresdepacoblurred.png", "rb") as file:
+            blurred_image.return_value = file.read()
+
+        picture = Picture(picture=uploaded_file)
+        picture.save()
+        os.remove(os.path.join("media/original_pictures", "unique_identifier-asdf.jpg"))
+        os.remove(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg"))
+        # When
+        picture.delete()
+        # Then
+        self.assertFalse(Path("media/original_pictures/unique_identifier-asdf.jpg").is_file())
+        self.assertFalse(Path("media/blurred_pictures/unique_identifier-asdf.jpg").is_file())
+
+    @mock.patch("core.models.blur_faces_of_image")
+    @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
+    def test_delete_picture_instance_does_not_fail_when_images_fields_are_not_set(self, _, blurred_image):
+        # Given
+        with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
+            uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
+
+        with open("tests/helpers/loshombresdepacoblurred.png", "rb") as file:
+            blurred_image.return_value = file.read()
+
+        picture = Picture(picture=uploaded_file)
+        picture.save()
+
+        os.remove(os.path.join("media/original_pictures", "unique_identifier-asdf.jpg"))
+        os.remove(os.path.join("media/blurred_pictures", "unique_identifier-asdf.jpg"))
+        picture.picture = None
+        picture.picture_blurred = None
+        picture.save()
+        # When
+        picture.delete()
 
     @staticmethod
     def assert_images_equal(expected_file_path, actual_file_path):

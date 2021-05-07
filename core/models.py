@@ -1,8 +1,10 @@
 import io
+import os
 import uuid
 
 from django.core.files.images import ImageFile
 from django.db import models
+from django.dispatch import receiver
 
 from src.blur_faces import blur_faces_of_image
 
@@ -39,3 +41,14 @@ class Picture(models.Model):
             self.blur_faces_in_picture()
 
         return super(Picture, self).save(*args, **kwargs)
+
+
+@receiver(models.signals.post_delete, sender=Picture)
+def auto_delete_picture_file_on_delete(sender, instance, **kwargs):
+    if instance.picture:
+        if os.path.isfile(instance.picture.path):
+            os.remove(instance.picture.path)
+
+    if instance.picture_blurred:
+        if os.path.isfile(instance.picture_blurred.path):
+            os.remove(instance.picture_blurred.path)
