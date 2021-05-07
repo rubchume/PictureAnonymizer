@@ -5,3 +5,4 @@ __pycache__
 photography-anonymizator-service-account-file.json
 media
 db.sqlite3
+.coverage
