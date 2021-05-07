@@ -3,9 +3,9 @@ import os
 import unittest
 from unittest import mock
 
-import cv2
 import google
 import numpy as np
+from skimage.io import imread
 
 from src.blur_faces import blur_faces
 
@@ -65,13 +65,11 @@ class BlurFacesTests(unittest.TestCase):
         # Then
         with io.open("tests/helpers/blurred.png", "rb") as blurred_image_file:
             blurred_image_bytes = blurred_image_file.read()
-            nparr = np.frombuffer(blurred_image_bytes, np.uint8)
-            blurred_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            blurred_image = imread(blurred_image_bytes, plugin="imageio")
 
         with io.open("tests/helpers/loshombresdepacoblurred.png", "rb") as expected_image_file:
             expected_image_bytes = expected_image_file.read()
-            nparr = np.frombuffer(expected_image_bytes, np.uint8)
-            expected_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            expected_image = imread(expected_image_bytes, plugin="imageio")
 
         np.testing.assert_array_equal(blurred_image, expected_image)
 
