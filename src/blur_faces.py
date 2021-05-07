@@ -45,7 +45,7 @@ def blur_rectangles(image_bytes, rectangles: List[ImageRectangle]):
 
     for rectangle in rectangles:
         face_region = image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max]
-        blurred_face = gaussian(face_region, 20, multichannel=True, preserve_range=True)
+        blurred_face = gaussian(face_region, 20, multichannel=True, preserve_range=True, mode="nearest", truncate=1)
         image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max] = blurred_face
 
     PIL_image = Image.fromarray(image)
@@ -73,7 +73,6 @@ def blur_faces_of_image(image):
 
 
 def blur_faces(image_file_path, blurred_image_file_path):
-    print('puta')
     image = read_image(image_file_path)
     blurred_image = blur_faces_of_image(image)
     write_image(blurred_image, blurred_image_file_path)
