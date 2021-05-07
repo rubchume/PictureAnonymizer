@@ -1,7 +1,6 @@
 import io
 import os
 from pathlib import Path
-import time
 import unittest
 from unittest import mock
 
