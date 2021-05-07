@@ -120,7 +120,7 @@ def typeguard(session):
     args = session.posargs or ["-m", "not e2e"]
     session.run("poetry", "install", "--no-dev", external=True)
     install_with_constraints(session, "pytest", "pytest-mock", "pytest-django", "beautifulsoup4", "typeguard")
-    session.run("pytest", "--typeguard-packages=src,core", *args)
+    session.run("pytest", "--typeguard-packages=src,core")
 
 
 @nox.session(python=["3.8"])
