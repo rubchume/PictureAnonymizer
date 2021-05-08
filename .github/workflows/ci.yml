@@ -7,11 +7,12 @@ on: [push, pull_request]
 # Jobs to run
 jobs:
 
-  # Job 1: test
+  # Job 1: tests
   test:
     name: Test
     runs-on: ubuntu-latest
     steps:
+
       # Step 1: set up Python
       - name: Set up
         uses: actions/setup-python@v1
@@ -31,3 +32,26 @@ jobs:
       # Step 4: run tests
       - name: Tests
         run: nox
+
+  # Job 2: Deploy to Heroku (https://github.com/marketplace/actions/deploy-to-heroku)
+  heroku-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      # Step 1: checkout repository code
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      # Step 2: export requirements
+      - name: Export requirements
+        run: |
+          pip3 install poetry
+          poetry export --format=requirements.txt --output=requirements.txt
+
+      # Step 3: Deploy to Heroku
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
