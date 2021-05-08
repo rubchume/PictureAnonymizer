@@ -52,10 +52,14 @@ def auto_delete_picture_file_on_delete(sender, instance, **kwargs):
         bucket = client.get_bucket(settings.GS_BUCKET_NAME)
 
         if instance.picture:
-            bucket.delete_blob(instance.picture.path)
+            blob = bucket.blob(instance.picture.name)
+            if blob.exists(client):
+                blob.delete()
 
         if instance.picture_blurred:
-            bucket.delete_blob(instance.picture_blurred.path)
+            blob = bucket.blob(instance.picture_blurred.name)
+            if blob.exists(client):
+                blob.delete()
     else:
         if instance.picture:
             if os.path.isfile(instance.picture.path):
