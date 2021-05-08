@@ -264,7 +264,7 @@ protobuf==3.16.0; python_version >= "3.6" and python_full_version < "3.0.0" or p
     --hash=sha256:648178381d9dbbc736849443151533ab958e7b8bcbd658a62ad10906552fddcc \
     --hash=sha256:be831508b9207156309a88b9d115dbae0caa4a987b05f1aa4fed4c5ac53ec51b \
     --hash=sha256:228eecbedd46d75010f1e0f8ce34dbcd11ae5a40c165a9fc9d330a58aa302818
-psycopg2==2.8.6; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" \
+psycopg2==2.8.6; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0") \
     --hash=sha256:068115e13c70dc5982dfc00c5d70437fe37c014c808acce119b5448361c03725 \
     --hash=sha256:d160744652e81c80627a909a0e808f3c6653a40af435744de037e3172cf277f5 \
     --hash=sha256:b8cae8b2f022efa1f011cc753adb9cbadfa5a184431d09b273fb49b4167561ad \
