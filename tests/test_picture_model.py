@@ -4,6 +4,8 @@ from pathlib import Path
 import unittest
 from unittest import mock
 
+from django.conf import settings
+
 from core.models import Picture
 import cv2
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -64,6 +66,8 @@ class PictureModelTests(unittest.TestCase):
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
     def test_delete_images_when_deleting_picture_instance(self, _, blurred_image):
         # Given
+        settings.DEBUG = True
+
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
 
