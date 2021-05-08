@@ -8,6 +8,8 @@ from .base import *
 
 ALLOWED_HOSTS = ['.herokuapp.com']
 
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', SECRET_KEY)
+
 MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 
 DATABASES = {
