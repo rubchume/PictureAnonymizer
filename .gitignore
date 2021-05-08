@@ -3,6 +3,5 @@ __pycache__
 .idea
 .ipynb_checkpoints
 photography-anonymizator-service-account-file.json
-media
 db.sqlite3
 .coverage
