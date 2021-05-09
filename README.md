@@ -1,4 +1,4 @@
-Author: Rubén Chuliá Mena <rchulia@outlook.com>
+Author: Rubén Chuliá Mena <rubchume@gmail.com>
 
 # Installation of packages
 The application needs to be executed in an environment with Python 3.8 installed.
@@ -9,7 +9,12 @@ pip install -r requirements.txt
 ```
 
 # Execution
-To be completed
+Run
+```bash
+python manage.py runserver
+```
+
+Open a web browser and navigate to the url http://127.0.0.1:8000.
 
 # Test
 Test the application with Pytest using
