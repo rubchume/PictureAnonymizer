@@ -40,19 +40,25 @@ def get_face_rectangles(image_bytes: bytes) -> List[ImageRectangle]:
 
 
 def blur_rectangles(image_bytes, rectangles: List[ImageRectangle]):
-    image = imread(image_bytes, plugin="imageio")
+    image = image_bytes_to_array(image_bytes)
 
     for rectangle in rectangles:
         face_region = image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max]
         blurred_face = gaussian(face_region, 20, multichannel=True, preserve_range=True, mode="nearest", truncate=1)
         image[rectangle.y_min:rectangle.y_max, rectangle.x_min:rectangle.x_max] = blurred_face
 
+    return image_array_to_bytes(image)
+
+
+def image_bytes_to_array(image_bytes):
+    return imread(image_bytes, plugin="imageio")
+
+
+def image_array_to_bytes(image) -> bytes:
     PIL_image = Image.fromarray(image)
     temp = io.BytesIO()
     PIL_image.save(temp, format="PNG")
-    image_bytes = temp.getvalue()
-
-    return image_bytes
+    return temp.getvalue()
 
 
 def read_image(image_file_path: str) -> bytes:

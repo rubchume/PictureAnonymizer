@@ -4,8 +4,9 @@ from pathlib import Path
 import unittest
 from unittest import mock
 
+from skimage.io import imread
+
 from core.models import Picture
-import cv2
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 import numpy as np
@@ -152,12 +153,10 @@ class PictureModelTests(unittest.TestCase):
     def assert_images_equal(expected_file_path, actual_file_path):
         with io.open(actual_file_path, "rb") as actual_image_file:
             actual_image_bytes = actual_image_file.read()
-            nparr = np.frombuffer(actual_image_bytes, np.uint8)
-            actual_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            actual_image = imread(actual_image_bytes, plugin="imageio")
 
         with io.open(expected_file_path, "rb") as expected_image_file:
             expected_image_bytes = expected_image_file.read()
-            nparr = np.frombuffer(expected_image_bytes, np.uint8)
-            expected_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            expected_image = imread(expected_image_bytes, plugin="imageio")
 
         np.testing.assert_array_equal(actual_image, expected_image)
