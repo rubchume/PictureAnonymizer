@@ -2,6 +2,8 @@ import io
 import os
 import uuid
 
+from core.google_cloud_picture_storage import delete_picture
+from django.conf import settings
 from django.core.files.images import ImageFile
 from django.db import models
 from django.dispatch import receiver
@@ -45,10 +47,13 @@ class Picture(models.Model):
 
 @receiver(models.signals.post_delete, sender=Picture)
 def auto_delete_picture_file_on_delete(sender, instance, **kwargs):
-    if instance.picture:
-        if os.path.isfile(instance.picture.path):
-            os.remove(instance.picture.path)
+    if not settings.DEBUG:
+        delete_picture(instance)
+    else:
+        if instance.picture:
+            if os.path.isfile(instance.picture.path):
+                os.remove(instance.picture.path)
 
-    if instance.picture_blurred:
-        if os.path.isfile(instance.picture_blurred.path):
-            os.remove(instance.picture_blurred.path)
+        if instance.picture_blurred:
+            if os.path.isfile(instance.picture_blurred.path):
+                os.remove(instance.picture_blurred.path)
