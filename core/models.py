@@ -2,12 +2,12 @@ import io
 import os
 import uuid
 
+from core.google_cloud_picture_storage import delete_picture
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.db import models
 from django.dispatch import receiver
 
-from core.google_cloud_picture_storage import delete_picture
 from src.blur_faces import blur_faces_of_image
 
 

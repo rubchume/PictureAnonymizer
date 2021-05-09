@@ -4,13 +4,12 @@ from pathlib import Path
 import unittest
 from unittest import mock
 
-from skimage.io import imread
-
 from core.models import Picture
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 import numpy as np
 import pytest
+from skimage.io import imread
 
 
 @pytest.mark.django_db

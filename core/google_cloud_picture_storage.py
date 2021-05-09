@@ -1,5 +1,5 @@
-from google.cloud import storage
 from django.conf import settings
+from google.cloud import storage
 
 
 def delete_picture(instance):
