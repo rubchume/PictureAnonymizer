@@ -6,8 +6,8 @@ from django.conf import settings
 from django.core.files.images import ImageFile
 from django.db import models
 from django.dispatch import receiver
-from google.cloud import storage
 
+from core.google_cloud_picture_storage import delete_picture
 from src.blur_faces import blur_faces_of_image
 
 
@@ -48,18 +48,7 @@ class Picture(models.Model):
 @receiver(models.signals.post_delete, sender=Picture)
 def auto_delete_picture_file_on_delete(sender, instance, **kwargs):
     if not settings.DEBUG:
-        client = storage.Client()
-        bucket = client.get_bucket(settings.GS_BUCKET_NAME)
-
-        if instance.picture:
-            blob = bucket.blob(instance.picture.name)
-            if blob.exists(client):
-                blob.delete()
-
-        if instance.picture_blurred:
-            blob = bucket.blob(instance.picture_blurred.name)
-            if blob.exists(client):
-                blob.delete()
+        delete_picture(instance)
     else:
         if instance.picture:
             if os.path.isfile(instance.picture.path):

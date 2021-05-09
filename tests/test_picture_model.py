@@ -128,25 +128,12 @@ class PictureModelTests(unittest.TestCase):
         # When
         picture.delete()
 
-    # https://cscheng.info/2018/08/21/mocking-a-file-storage-backend-in-django-tests.html
-    @mock.patch("google.cloud.storage.Client")
-    @mock.patch('storages.backends.gcloud.GoogleCloudStorage.save')
+    @mock.patch("core.models.delete_picture")
     @mock.patch("core.models.blur_faces_of_image")
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
-    def test_delete_images_when_deleting_picture_instance_in_production(self, _, blurred_image, mock_save, client_mock):
+    def test_delete_images_when_deleting_picture_instance_in_production(self, _, blurred_image, delete_picture):
         # Given
         settings.DEBUG = False
-        settings.DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-        settings.GS_BUCKET_NAME = 'photography_anonymizer_bucket'
-        mock_save.side_effect = ["saved_original.jpg", "saved_blurred.jpg"]
-
-        blob1 = mock.MagicMock()
-        blob2 = mock.MagicMock()
-        client = mock.MagicMock()
-        bucket = mock.MagicMock()
-        client_mock.return_value = client
-        client.get_bucket.return_value = bucket
-        bucket.blob.side_effect = [blob1, blob2]
 
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
@@ -156,30 +143,10 @@ class PictureModelTests(unittest.TestCase):
 
         picture = Picture(picture=uploaded_file)
         picture.save()
-        self.assertEqual(2, mock_save.call_count)
-        self.assertEqual(
-            os.path.join("original_pictures", "unique_identifier-asdf.jpg"),
-            mock_save.call_args_list[0][0][0]
-        )
-        self.assertEqual(
-            os.path.join("blurred_pictures", "unique_identifier-asdf.jpg"),
-            mock_save.call_args_list[1][0][0]
-        )
         # When
         picture.delete()
-        # # Then
-        client.get_bucket.assert_called_once_with("photography_anonymizer_bucket")
-        self.assertEqual(2, bucket.blob.call_count)
-        self.assertEqual(
-            "saved_original.jpg",
-            bucket.blob.call_args_list[0][0][0]
-        )
-        self.assertEqual(
-            "saved_blurred.jpg",
-            bucket.blob.call_args_list[1][0][0]
-        )
-        blob1.delete.assert_called_once()
-        blob2.delete.assert_called_once()
+        # Then
+        delete_picture.assert_called_once_with(picture)
 
     @staticmethod
     def assert_images_equal(expected_file_path, actual_file_path):
