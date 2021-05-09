@@ -5,10 +5,11 @@ import unittest
 from unittest import mock
 
 from core.models import Picture
-import cv2
+from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 import numpy as np
 import pytest
+from skimage.io import imread
 
 
 @pytest.mark.django_db
@@ -64,6 +65,8 @@ class PictureModelTests(unittest.TestCase):
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
     def test_delete_images_when_deleting_picture_instance(self, _, blurred_image):
         # Given
+        settings.DEBUG = True
+
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
 
@@ -84,6 +87,8 @@ class PictureModelTests(unittest.TestCase):
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
     def test_delete_picture_instance_does_not_fail_when_images_are_missing(self, _, blurred_image):
         # Given
+        settings.DEBUG = True
+
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
 
@@ -104,6 +109,8 @@ class PictureModelTests(unittest.TestCase):
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
     def test_delete_picture_instance_does_not_fail_when_images_fields_are_not_set(self, _, blurred_image):
         # Given
+        settings.DEBUG = True
+
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
 
@@ -121,16 +128,34 @@ class PictureModelTests(unittest.TestCase):
         # When
         picture.delete()
 
+    @mock.patch("core.models.delete_picture")
+    @mock.patch("core.models.blur_faces_of_image")
+    @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
+    def test_delete_images_when_deleting_picture_instance_in_production(self, _, blurred_image, delete_picture):
+        # Given
+        settings.DEBUG = False
+
+        with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
+            uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
+
+        with open("tests/helpers/loshombresdepacoblurred.png", "rb") as file:
+            blurred_image.return_value = file.read()
+
+        picture = Picture(picture=uploaded_file)
+        picture.save()
+        # When
+        picture.delete()
+        # Then
+        delete_picture.assert_called_once_with(picture)
+
     @staticmethod
     def assert_images_equal(expected_file_path, actual_file_path):
         with io.open(actual_file_path, "rb") as actual_image_file:
             actual_image_bytes = actual_image_file.read()
-            nparr = np.frombuffer(actual_image_bytes, np.uint8)
-            actual_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            actual_image = imread(actual_image_bytes, plugin="imageio")
 
         with io.open(expected_file_path, "rb") as expected_image_file:
             expected_image_bytes = expected_image_file.read()
-            nparr = np.frombuffer(expected_image_bytes, np.uint8)
-            expected_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            expected_image = imread(expected_image_bytes, plugin="imageio")
 
         np.testing.assert_array_equal(actual_image, expected_image)
