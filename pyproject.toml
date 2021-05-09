@@ -51,6 +51,7 @@ source = ["src", "*/site-packages"]
 [tool.coverage.run]
 branch = true
 source = ["src", "core"]
+omit = ["core/google_cloud_picture_storage.py"]
 
 [tool.coverage.report]
 show_missing = true
