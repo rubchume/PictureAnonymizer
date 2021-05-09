@@ -87,6 +87,8 @@ class PictureModelTests(unittest.TestCase):
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
     def test_delete_picture_instance_does_not_fail_when_images_are_missing(self, _, blurred_image):
         # Given
+        settings.DEBUG = True
+
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
 
@@ -107,6 +109,8 @@ class PictureModelTests(unittest.TestCase):
     @mock.patch("uuid.uuid4", return_value="unique_identifier-asdf")
     def test_delete_picture_instance_does_not_fail_when_images_fields_are_not_set(self, _, blurred_image):
         # Given
+        settings.DEBUG = True
+
         with open('tests/helpers/ExamplePicture.jpg', 'rb') as file:
             uploaded_file = SimpleUploadedFile('ExamplePicture.jpg', file.read())
 
@@ -123,20 +127,6 @@ class PictureModelTests(unittest.TestCase):
         picture.save()
         # When
         picture.delete()
-
-    @staticmethod
-    def assert_images_equal(expected_file_path, actual_file_path):
-        with io.open(actual_file_path, "rb") as actual_image_file:
-            actual_image_bytes = actual_image_file.read()
-            nparr = np.frombuffer(actual_image_bytes, np.uint8)
-            actual_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-        with io.open(expected_file_path, "rb") as expected_image_file:
-            expected_image_bytes = expected_image_file.read()
-            nparr = np.frombuffer(expected_image_bytes, np.uint8)
-            expected_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-        np.testing.assert_array_equal(actual_image, expected_image)
 
     # https://cscheng.info/2018/08/21/mocking-a-file-storage-backend-in-django-tests.html
     @mock.patch("google.cloud.storage.Client")
@@ -190,3 +180,17 @@ class PictureModelTests(unittest.TestCase):
         )
         blob1.delete.assert_called_once()
         blob2.delete.assert_called_once()
+
+    @staticmethod
+    def assert_images_equal(expected_file_path, actual_file_path):
+        with io.open(actual_file_path, "rb") as actual_image_file:
+            actual_image_bytes = actual_image_file.read()
+            nparr = np.frombuffer(actual_image_bytes, np.uint8)
+            actual_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        with io.open(expected_file_path, "rb") as expected_image_file:
+            expected_image_bytes = expected_image_file.read()
+            nparr = np.frombuffer(expected_image_bytes, np.uint8)
+            expected_image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        np.testing.assert_array_equal(actual_image, expected_image)
